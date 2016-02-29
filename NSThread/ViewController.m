@@ -45,7 +45,7 @@
      * object: 如果上面选择的方法有参数，则object便是这个方法的参数
      
      */
-     thread = [[NSThread alloc]initWithTarget:self selector:@selector(downloadImage:) object:kUrl];
+     thread = [[NSThread alloc]initWithTarget:self selector:@selector(downloadImage) object:nil];
     
     //给线程起名字
     thread.name = @"子线程";
@@ -63,7 +63,7 @@
  *  downloadImage该方法的参数取决于创建线程时传给object的参数
  
  */
-- (void)downloadImage:(NSString *)url{
+- (void)downloadImage{
     
     //将图片的url地址转化为data对象
     NSData *data = [NSData dataWithContentsOfURL:[NSURL URLWithString:kUrl]];
