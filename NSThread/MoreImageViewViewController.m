@@ -30,7 +30,6 @@
     [super viewDidLoad];
     
     UILabel *lable = [[UILabel alloc]initWithFrame:CGRectMake(100, 300, 0, 0)];
-    
     lable.text = @"点击屏幕停止加载";
     lable.textColor = [UIColor blackColor];
     [lable sizeToFit];
@@ -64,7 +63,7 @@
         NSThread *thread = [[NSThread alloc]initWithTarget:self selector:@selector(downloadImage:) object:@(index)];
         
         //给线程设置优先级（0-1），优先级越高，被优先调用的几率越高。
-        //        thread.threadPriority = index/10.0;
+        //thread.threadPriority = index/10.0;
         thread.name = [NSString stringWithFormat:@"线程%d",index];
         [thread start];
         
@@ -79,6 +78,28 @@
 //每条线程都会走这个方法，来下载相应的图片，在这里为了方便起见，我采用了同一个url图片
 - (void)downloadImage:(NSNumber *)index{
     
+    /*
+     
+     * 通过线程的休眠来实现图片的顺序加载
+     
+        1. 第一个线程，休眠0秒，第二个线程休眠1秒...第六个线程休眠5面
+     
+        2. 正常的流程如下（基于线程同时执行的原理）
+          
+           1. 多线程开启，并在线程中写上线程休眠代码
+           2. 线程执行到休眠代码，停止执行
+           3. 点击屏幕，将为完成的线程设为取消状态
+           4. 休眠结束，线程进行判断是否被取消，被取消就退出
+           
+        3. 错误流程
+     
+           1. 多线程开启，并在线程中写上线程休眠代码
+           2. 线程进行判断是否被取消，被取消就退出
+           3. 线程执行到休眠代码，停止执行
+           4. 点击屏幕，将为完成的线程设为取消状态
+           5. 休眠结束，继续执行线程
+     
+     */
     [NSThread sleepForTimeInterval:[index integerValue]];
     
     NSThread *currentThread = [NSThread currentThread];
